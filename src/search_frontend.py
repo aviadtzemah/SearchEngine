@@ -1,5 +1,8 @@
 from flask import Flask, request, jsonify
+from src.Pageview import retrieve_pageviews
+from src.Pagerank import retrive_pagerank
 import os
+
 
 
 class MyFlaskApp(Flask):
@@ -111,7 +114,7 @@ def search_anchor():
     if len(query) == 0:
       return jsonify(res)
     # BEGIN SOLUTION
-    
+
     # END SOLUTION
     return jsonify(res)
 
@@ -136,9 +139,10 @@ def get_pagerank():
     if len(wiki_ids) == 0:
       return jsonify(res)
     # BEGIN SOLUTION
-
+    res = retrive_pagerank(wiki_ids)
     # END SOLUTION
     return jsonify(res)
+
 
 @app.route("/get_pageview", methods=['POST'])
 def get_pageview():
@@ -163,7 +167,7 @@ def get_pageview():
     if len(wiki_ids) == 0:
       return jsonify(res)
     # BEGIN SOLUTION
-
+    res =  retrieve_pageviews(wiki_ids)
     # END SOLUTION
     return jsonify(res)
 
