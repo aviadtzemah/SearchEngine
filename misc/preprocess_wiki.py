@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-%load_ext google.colab.data_table
+#%load_ext google.colab.data_table
 import bz2
 from functools import partial
 from collections import Counter, OrderedDict
@@ -18,7 +18,7 @@ import nltk
 from nltk.stem.porter import *
 from nltk.corpus import stopwords
 import matplotlib.pyplot as plt
-%matplotlib inline
+#%matplotlib inline
 from pathlib import Path
 import itertools
 from time import time
