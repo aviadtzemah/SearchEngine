@@ -30,7 +30,7 @@ def get_candidate_documents_and_scores_binary(query_to_search, index, words, pls
 
             # we only need to count how many times each doc occured
             for candidate in list_of_doc:
-                candidates[candidate[0]] = candidates.get(candidate[0], 0) + 1
+                candidates[candidate] = candidates.get(candidate, 0) + 1
 
     return candidates
 
@@ -67,7 +67,7 @@ def get_candidate_documents_and_scores(query_to_search, index, words, pls):
     return candidates
 
 
-def binary_search(query, index):
+def binary_search(query, index,binindex):
     """
     Gets all the results for a given query using binary ranking on the index docs
 
@@ -83,7 +83,8 @@ def binary_search(query, index):
       each element is a tuple (wiki_id, title).
     """
     word, pls = get_posting_gen(index)
-    candidates = get_candidate_documents_and_scores_binary(tokenize(query), index, word, pls)
+    bword, bpls = get_posting_gen(binindex)
+    candidates = get_candidate_documents_and_scores_binary(tokenize(query), index, bword, bpls)
 
     # candidates_list =
     return pd.DataFrame.from_dict(candidates, orient='index').rename(columns={0: 'score'})

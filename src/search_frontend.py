@@ -89,7 +89,7 @@ def search_title():
     if len(query) == 0:
       return jsonify(res)
     # BEGIN SOLUTION
-    res =binary_search(query, binary_index)
+    res =binary_search(query,index, binary_index)
     # END SOLUTION
     return jsonify(res)
 
@@ -116,7 +116,7 @@ def search_anchor():
     if len(query) == 0:
       return jsonify(res)
     # BEGIN SOLUTION
-    res = binary_search(query, binary_index)
+    res = binary_search(query,index, binary_index)
     #res = list(map(lambda x: (get_title(x[0]), x[1]), res))
     # END SOLUTION
     return jsonify(res)

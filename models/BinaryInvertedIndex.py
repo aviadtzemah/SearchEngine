@@ -8,14 +8,14 @@ from itertools import islice,count
 from models.MultiFileWriter import MultiFileWriter,MultiFileReader
 
 
-TUPLE_SIZE = 6  # We're going to pack the doc_id and tf values in this
+TUPLE_SIZE = 4  # We're going to pack the doc_id and tf values in this
 # many bytes.
 TF_MASK = 2 ** 16 - 1  # Masking the 16 low bits of an integer
 
 DL = {}  # We're going to update and calculate this after each document. This will be usefull for the calculation of AVGDL (utilized in BM25)
 
 
-class InvertedIndex:
+class BinaryInvertedIndex:
     def __init__(self, docs={}):
         """ Initializes the inverted index and add documents to it (if provided).
         Parameters:
@@ -81,7 +81,7 @@ class InvertedIndex:
         if sort:
             pl = sorted(pl, key=itemgetter(0))
         # convert to bytes
-        b = b''.join([(int(doc_id) << 16 | (tf & TF_MASK)).to_bytes(TUPLE_SIZE, 'big')
+        b = b''.join([(int(doc_id)).to_bytes(TUPLE_SIZE, 'big')
                       for doc_id, tf in pl])
         # write to file(s)
         locs = writer.write(b)
@@ -109,8 +109,8 @@ class InvertedIndex:
 
                 for i in range(self.df[w]):
                     doc_id = int.from_bytes(b[i * TUPLE_SIZE:i * TUPLE_SIZE + 4], 'big')
-                    tf = int.from_bytes(b[i * TUPLE_SIZE + 4:(i + 1) * TUPLE_SIZE], 'big')
-                    posting_list.append((doc_id, tf))
+                    #tf = int.from_bytes(b[i * TUPLE_SIZE + 4:(i + 1) * TUPLE_SIZE], 'big')
+                    posting_list.append(doc_id)
 
                 yield w, posting_list
 
