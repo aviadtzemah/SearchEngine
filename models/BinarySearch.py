@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from data.common import tokenize,get_posting_gen
+from data.common import tokenize, get_posting_gen
 
 
 def get_candidate_documents_and_scores_binary(query_to_search, index, words, pls):

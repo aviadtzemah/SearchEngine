@@ -2,8 +2,7 @@ from flask import Flask, request, jsonify
 from src.Pageview import retrieve_pageviews
 from src.Pagerank import retrive_pagerank
 from models.BinarySearch import binary_search
-from models import index
-from data.common import get_title
+from models import index,binary_index
 import os
 
 
@@ -90,7 +89,7 @@ def search_title():
     if len(query) == 0:
       return jsonify(res)
     # BEGIN SOLUTION
-    res =binary_search(query, index)
+    res =binary_search(query, binary_index)
     # END SOLUTION
     return jsonify(res)
 
@@ -117,8 +116,8 @@ def search_anchor():
     if len(query) == 0:
       return jsonify(res)
     # BEGIN SOLUTION
-    res = binary_search(query, index)
-    res = list(map(lambda x: (get_title(x[0]), x[1]), res))
+    res = binary_search(query, binary_index)
+    #res = list(map(lambda x: (get_title(x[0]), x[1]), res))
     # END SOLUTION
     return jsonify(res)
 

@@ -1,8 +1,6 @@
 
 # for tokenizing
 import re
-import requests
-from bs4 import BeautifulSoup
 import nltk
 nltk.download('stopwords')
 from nltk.corpus import stopwords
@@ -38,11 +36,3 @@ def get_posting_gen(index):
     """
     words, pls = zip(*index.posting_lists_iter1())
     return words, pls
-
-
-def get_title(wiki_id):
-    url = f"https://en.wikipedia.org/?curid={wiki_id}"
-    reqs = requests.get(url)
-    soup = BeautifulSoup(reqs.text, 'html.parser')
-    for title in soup.find_all('title'):
-        return title.get_text()
