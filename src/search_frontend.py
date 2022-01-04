@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from src.Pageview import retrieve_pageviews
 from src.Pagerank import retrive_pagerank
+from src.SearchBody import searchbody
 from models.BinarySearch import binary_search
 from models import index,binary_index
 import os
@@ -63,7 +64,7 @@ def search_body():
     if len(query) == 0:
       return jsonify(res)
     # BEGIN SOLUTION
-
+    res = searchbody(query).tolist()
     # END SOLUTION
     return jsonify(res)
 

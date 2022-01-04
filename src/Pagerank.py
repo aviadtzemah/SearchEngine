@@ -23,9 +23,5 @@ def retrive_pagerank(article_ids):
           list of page view numbers from August 2021 that correrspond to the
           provided list article IDs.
     """
-    # loading the pagerank.csv into pandas dataframe
 
-    #selected = pagerank_df[pagerank_df['page_id'].isin(article_ids)]
-    #selected = selected.set_index('page_id')  # TODO: check if this takes too much time
-    #return selected['rank'].reindex(article_ids).tolist()
     return [pagerank_dict.get(key) for key in article_ids]
