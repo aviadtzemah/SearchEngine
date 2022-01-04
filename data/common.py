@@ -36,3 +36,5 @@ def get_posting_gen(index):
     """
     words, pls = zip(*index.posting_lists_iter1())
     return words, pls
+
+

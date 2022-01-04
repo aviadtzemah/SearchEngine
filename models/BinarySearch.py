@@ -67,7 +67,7 @@ def get_candidate_documents_and_scores(query_to_search, index, words, pls):
     return candidates
 
 
-def binary_search(query, index,binindex):
+def binary_search(query, binary_index):
     """
     Gets all the results for a given query using binary ranking on the index docs
 
@@ -82,9 +82,9 @@ def binary_search(query, index,binindex):
     return: a list of all the search results, ordered from best to worst where
       each element is a tuple (wiki_id, title).
     """
-    word, pls = get_posting_gen(index)
-    bword, bpls = get_posting_gen(binindex)
-    candidates = get_candidate_documents_and_scores_binary(tokenize(query), index, bword, bpls)
+    #word, pls = get_posting_gen(index)
+    bword, bpls = get_posting_gen(binary_index)
+    candidates = get_candidate_documents_and_scores_binary(tokenize(query), binary_index, bword, bpls)
 
     # candidates_list =
     return pd.DataFrame.from_dict(candidates, orient='index').rename(columns={0: 'score'})
