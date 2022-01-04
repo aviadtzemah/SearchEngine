@@ -3,6 +3,7 @@ from src.Pageview import retrieve_pageviews
 from src.Pagerank import retrive_pagerank
 from src.SearchBody import searchbody
 from src.SearchTitle import searchtitle
+from models.Id2Title import retrive_titles
 from src.SearchAnchor import searchanchor
 from models import index,binary_index
 
@@ -67,8 +68,10 @@ def search_body():
       return jsonify(res)
     # BEGIN SOLUTION
     res = searchbody(query).tolist()
+    res = retrive_titles(res)
     # END SOLUTION
     return jsonify(res)
+
 
 @app.route("/search_title")
 def search_title():
@@ -93,6 +96,7 @@ def search_title():
       return jsonify(res)
     # BEGIN SOLUTION
     res = searchtitle(query).tolist()
+    res = retrive_titles(res)
     # END SOLUTION
     return jsonify(res)
 

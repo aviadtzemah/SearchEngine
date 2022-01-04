@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 
-PAGE_RANK_PATH = os.path.join("..","data","data","page_ranks.csv")
+PAGE_RANK_PATH = os.path.join("..","data","data","pagerank.csv")
 print("Start - setup pagerank")
 pagerank_df = pd.read_csv(PAGE_RANK_PATH)
 pagerank_df.columns = ['page_id', 'rank']

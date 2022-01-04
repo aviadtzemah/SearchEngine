@@ -7,7 +7,6 @@ import operator
 import math
 import numpy as np
 import pandas as pd
-from itertools import islice,count
 from models.MultiFileWriter import MultiFileWriter,MultiFileReader
 
 
