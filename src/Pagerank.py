@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-#TODO - mak it run only once
+
 PAGE_RANK_PATH = os.path.join("..","data","data","page_ranks.csv")
 print("Start - setup pagerank")
 pagerank_df = pd.read_csv(PAGE_RANK_PATH)

@@ -5,7 +5,6 @@ import pickle
 PAGE_VIEW_PATH = os.path.join("..","data","data","pageviews-202108-user.pkl")
 
 
-#TODO - make this code run only once
 print("Start - Set up pageviews")
 with open(PAGE_VIEW_PATH, 'rb') as f:
     wid2pv = pickle.loads(f.read())
