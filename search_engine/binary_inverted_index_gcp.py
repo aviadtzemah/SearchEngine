@@ -1,4 +1,3 @@
-import pyspark
 import sys
 from collections import Counter, OrderedDict
 import itertools
@@ -10,13 +9,15 @@ from operator import itemgetter
 from time import time
 from pathlib import Path
 import pickle
-from google.cloud import storage
+#from google.cloud import storage
 from collections import defaultdict
 from contextlib import closing
 
 
 # Let's start with a small block size of 30 bytes just to test things out. 
 BLOCK_SIZE = 1999998
+
+base_path = ''
 
 class MultiFileWriter:
     """ Sequential binary writer to multiple files of up to BLOCK_SIZE each. """
@@ -27,8 +28,8 @@ class MultiFileWriter:
                           for i in itertools.count())
         self._f = next(self._file_gen)
         # Connecting to google storage bucket. 
-        self.client = storage.Client()
-        self.bucket = self.client.bucket(bucket_name)
+        #self.client = storage.Client()
+        #self.bucket = self.client.bucket(bucket_name)
         
     
     def write(self, b):
@@ -55,7 +56,7 @@ class MultiFileWriter:
             The function saves the posting files into the right bucket in google storage.
         '''
         file_name = self._f.name
-        blob = self.bucket.blob(f"postings_gcp/{file_name}")
+        blob = self.bucket.blob(f"title_postings_gcp/{file_name}")
         blob.upload_from_filename(file_name)
 
         
@@ -65,11 +66,13 @@ class MultiFileReader:
     def __init__(self):
         self._open_files = {}
 
-    def read(self, locs, n_bytes):
+    def read(self, base_dir, locs, n_bytes):
         b = []
+        if type(locs) is tuple:
+            locs = [locs]
         for f_name, offset in locs:
             if f_name not in self._open_files:
-                self._open_files[f_name] = open(f_name, 'rb')
+                self._open_files[f_name] = open(f"{base_dir}{f_name}", 'rb')
             f = self._open_files[f_name]
             f.seek(offset)
             n_read = min(n_bytes, BLOCK_SIZE - offset)
@@ -149,13 +152,13 @@ class InvertedIndex:
         del state['_posting_list']
         return state
 
-    def posting_lists_iter(self):
+    def posting_lists_iter(self, base_dir):
         """ A generator that reads one posting list from disk and yields 
             a (word:str, [(doc_id:int, tf:int), ...]) tuple.
         """
         with closing(MultiFileReader()) as reader:
             for w, locs in self.posting_locs.items():
-                b = reader.read(locs[0], self.df[w] * TUPLE_SIZE)
+                b = reader.read(base_dir, locs, self.df[w] * TUPLE_SIZE)
                 posting_list = []
                 for i in range(self.df[w]):
                     doc_id = int.from_bytes(b[i*TUPLE_SIZE:i*TUPLE_SIZE+4], 'big')
@@ -199,9 +202,9 @@ class InvertedIndex:
     def _upload_posting_locs(bucket_id, posting_locs, bucket_name):
         with open(f"{bucket_id}_posting_locs.pickle", "wb") as f:
             pickle.dump(posting_locs, f)
-        client = storage.Client()
-        bucket = client.bucket(bucket_name)
-        blob_posting_locs = bucket.blob(f"postings_gcp/{bucket_id}_posting_locs.pickle")
-        blob_posting_locs.upload_from_filename(f"{bucket_id}_posting_locs.pickle")
+        # client = storage.Client()
+        # bucket = client.bucket(bucket_name)
+        # blob_posting_locs = bucket.blob(f"title_postings_gcp/{bucket_id}_posting_locs.pickle")
+        # blob_posting_locs.upload_from_filename(f"{bucket_id}_posting_locs.pickle")
     
 
