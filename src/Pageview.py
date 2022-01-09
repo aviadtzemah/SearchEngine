@@ -2,7 +2,23 @@ import os
 import pandas as pd
 import pickle
 
-PAGE_VIEW_PATH = os.path.join("..","data","data","pageviews-202108-user.pkl")
+PAGE_VIEW_PATH = '/home/aviadsha/data/pageviews-202108-user.pkl'
+
+print("Start - Set up pageviews")
+with open(PAGE_VIEW_PATH, 'rb') as f:
+    wid2pv = pickle.loads(f.read())
+
+# loading the counter into a df
+pageviews_df = pd.DataFrame.from_dict(wid2pv, orient='index').reset_index()
+pageviews_df.columns = ['page_id', 'views']
+pageviews_dict = pageviews_df.set_index('page_id')
+pageviews_dict = pageviews_dict.to_dict()['views']
+print("Finished- Set up pageviews")
+
+
+def get_pageview_df(article_ids):
+    return pd.DataFrame({'page_id': article_ids, 'score': [pageviews_dict.get(key) for key in article_ids]}).set_index(
+        'page_id')
 
 
 def retrieve_pageviews(article_ids):
@@ -18,14 +34,4 @@ def retrieve_pageviews(article_ids):
     return: a list of floats:
           list of PageRank scores that correrspond to the provided article IDs.
     """
-    # read in the counter
-    with open(PAGE_VIEW_PATH, 'rb') as f:
-        wid2pv = pickle.loads(f.read())
-
-    # loading the counter into a df
-    pageviews_df = pd.DataFrame.from_dict(wid2pv, orient='index').reset_index()
-    pageviews_df.columns = ['page_id', 'views']
-
-    selected = pageviews_df[pageviews_df['page_id'].isin(article_ids)]
-    selected = selected.set_index('page_id')  # TODO: check if this takes too much time
-    return selected['views'].reindex(article_ids).tolist()
+    return [pageviews_dict.get(key) for key in article_ids]
